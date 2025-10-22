@@ -1,78 +1,27 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
-import { Link } from "wouter";
 
 /**
- * Home page - Landing page for the blog management system
+ * All content in this page are only for example, delete if unneeded
+ * When building pages, remember your instructions in Frontend Workflow, Frontend Best Practices, Design Guide and Common Pitfalls
  */
 export default function Home() {
-  const { user, isAuthenticated } = useAuth();
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
+  // If theme is switchable in App.tsx, we can implement theme toggling like this:
+  // const { theme, toggleTheme } = useTheme();
+
+  // Use APP_LOGO (as image src) and APP_TITLE if needed
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header Navigation */}
-      <header className="border-b border-border bg-background sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            {APP_LOGO && <img src={APP_LOGO} alt="Logo" className="h-8 w-8" />}
-            <h1 className="text-xl font-bold">{APP_TITLE}</h1>
-          </div>
-          <nav className="flex gap-4 items-center">
-            {isAuthenticated ? (
-              <>
-                <Link href="/blogs">
-                  <Button variant="ghost">บทความของฉัน</Button>
-                </Link>
-                <Link href="/create">
-                  <Button variant="default">เขียนบทความใหม่</Button>
-                </Link>
-                <div className="text-sm text-muted-foreground">
-                  {user?.name || user?.email}
-                </div>
-              </>
-            ) : (
-              <a href={getLoginUrl()}>
-                <Button variant="default">เข้าสู่ระบบ</Button>
-              </a>
-            )}
-          </nav>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1">
-        <div className="container mx-auto px-4 py-8">
-          {isAuthenticated ? (
-            <div>
-              <h2 className="text-3xl font-bold mb-8">ยินดีต้อนรับ, {user?.name || "ผู้ใช้"}</h2>
-              <div className="grid gap-4">
-                <Link href="/blogs">
-                  <Button variant="outline" className="w-full">
-                    ดูบทความทั้งหมด
-                  </Button>
-                </Link>
-                <Link href="/create">
-                  <Button variant="default" className="w-full">
-                    เขียนบทความใหม่
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-4xl font-bold mb-4">ยินดีต้อนรับสู่ระบบจัดการบทความ</h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                แพลตฟอร์มสำหรับการเขียน แก้ไข และแชร์บทความของคุณ
-              </p>
-              <a href={getLoginUrl()}>
-                <Button size="lg">เข้าสู่ระบบเพื่อเริ่มต้น</Button>
-              </a>
-            </div>
-          )}
-        </div>
+      <main>
+        Example Page
+        <Button variant="default">Example Button</Button>
       </main>
     </div>
   );
 }
-
