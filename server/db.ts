@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, like, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, blogs, comments, InsertBlog, InsertComment } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -42,7 +42,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       const value = user[field];
       if (value === undefined) return;
       const normalized = value ?? null;
-      values[field] = normalized;
+      (values as Record<string, unknown>)[field] = normalized;
       updateSet[field] = normalized;
     };
 
@@ -89,4 +89,162 @@ export async function getUser(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Blog queries
+export async function createBlog(blog: InsertBlog) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.insert(blogs).values(blog);
+  return result;
+}
+
+export async function getAllBlogs() {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db
+    .select({
+      id: blogs.id,
+      title: blogs.title,
+      content: blogs.content,
+      authorId: blogs.authorId,
+      createdAt: blogs.createdAt,
+      updatedAt: blogs.updatedAt,
+      author: {
+        id: users.id,
+        name: users.name,
+      },
+    })
+    .from(blogs)
+    .leftJoin(users, eq(blogs.authorId, users.id))
+    .orderBy(desc(blogs.createdAt));
+
+  return result;
+}
+
+export async function getBlogById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db
+    .select({
+      id: blogs.id,
+      title: blogs.title,
+      content: blogs.content,
+      authorId: blogs.authorId,
+      createdAt: blogs.createdAt,
+      updatedAt: blogs.updatedAt,
+      author: {
+        id: users.id,
+        name: users.name,
+      },
+    })
+    .from(blogs)
+    .leftJoin(users, eq(blogs.authorId, users.id))
+    .where(eq(blogs.id, id))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function searchBlogs(query: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db
+    .select({
+      id: blogs.id,
+      title: blogs.title,
+      content: blogs.content,
+      authorId: blogs.authorId,
+      createdAt: blogs.createdAt,
+      updatedAt: blogs.updatedAt,
+      author: {
+        id: users.id,
+        name: users.name,
+      },
+    })
+    .from(blogs)
+    .leftJoin(users, eq(blogs.authorId, users.id))
+    .where(like(blogs.title, `%${query}%`))
+    .orderBy(desc(blogs.createdAt));
+
+  return result;
+}
+
+export async function updateBlog(id: number, data: Partial<InsertBlog>) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.update(blogs).set(data).where(eq(blogs.id, id));
+  return result;
+}
+
+export async function deleteBlog(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.delete(blogs).where(eq(blogs.id, id));
+  return result;
+}
+
+// Comment queries
+export async function createComment(comment: InsertComment) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.insert(comments).values(comment);
+  return result;
+}
+
+export async function getCommentsByBlogId(blogId: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db
+    .select({
+      id: comments.id,
+      content: comments.content,
+      authorId: comments.authorId,
+      blogId: comments.blogId,
+      createdAt: comments.createdAt,
+      updatedAt: comments.updatedAt,
+      author: {
+        id: users.id,
+        name: users.name,
+      },
+    })
+    .from(comments)
+    .leftJoin(users, eq(comments.authorId, users.id))
+    .where(eq(comments.blogId, blogId))
+    .orderBy(desc(comments.createdAt));
+
+  return result;
+}
+
+export async function deleteComment(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.delete(comments).where(eq(comments.id, id));
+  return result;
+}
+
