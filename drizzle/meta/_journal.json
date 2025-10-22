@@ -1,5 +1,34 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1761158533586,
+      "tag": "0000_complex_silver_fox",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1761158572838,
+      "tag": "0001_first_songbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1761158870221,
+      "tag": "0002_high_star_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1761158932935,
+      "tag": "0003_smart_gamma_corps",
+      "breakpoints": true
+    }
+  ]
 }
