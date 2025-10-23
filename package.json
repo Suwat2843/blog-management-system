@@ -10,7 +10,9 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "dotenv -e .env.local -- drizzle-kit generate:mysql && dotenv -e .env.local -- drizzle-kit migrate"
+    "db:push": "dotenv -e .env.local -- drizzle-kit generate:mysql && dotenv -e .env.local -- drizzle-kit migrate",
+    "render:build": "pnpm install && pnpm build",
+    "render:start": "pnpm start"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",

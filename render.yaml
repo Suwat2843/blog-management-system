@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: blog-management-system
+    env: node
+    plan: free
+    buildCommand: |
+      pnpm install
+      pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: blog-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: VITE_APP_TITLE
+        value: Blog Management System
+      - key: VITE_APP_LOGO
+        value: https://example.com/logo.png
+      - key: VITE_OAUTH_PORTAL_URL
+        value: https://portal.manus.im
+      - key: OWNER_NAME
+        value: Admin
+      - key: OWNER_OPEN_ID
+        value: admin
+
+databases:
+  - name: blog-db
+    plan: free
+    databaseName: blog_db
+    user: bloguser
