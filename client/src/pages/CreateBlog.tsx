@@ -11,7 +11,7 @@ import { useState } from "react";
  * Create blog page - Form to create a new blog post
  */
 export default function CreateBlog() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -56,7 +56,15 @@ export default function CreateBlog() {
             ← กลับ
           </Button>
           <h1 className="text-2xl font-bold flex-1 text-center">เขียนบทความใหม่</h1>
-          <div className="w-20"></div>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
+          >
+            ออกจากระบบ
+          </Button>
         </div>
       </header>
 

@@ -7,17 +7,20 @@ export const APP_LOGO =
   "https://placehold.co/128x128/E1E7EF/1F2937?text=App";
 
 // Generate login URL at runtime so redirect URI reflects the current origin.
-export const getLoginUrl = () => {
-  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
-  const appId = import.meta.env.VITE_APP_ID;
-  const redirectUri = `${window.location.origin}/api/oauth/callback`;
-  const state = btoa(redirectUri);
+export function getLoginUrl() {
+  // ใช้ import.meta.env สำหรับ client-side
+  const base = import.meta.env.VITE_OAUTH_PORTAL_URL || "";
 
-  const url = new URL(`${oauthPortalUrl}/app-auth`);
-  url.searchParams.set("appId", appId);
-  url.searchParams.set("redirectUri", redirectUri);
-  url.searchParams.set("state", state);
-  url.searchParams.set("type", "signIn");
+  if (!base) {
+    // ถ้าไม่มีค่า ให้คืนค่าว่างหรือ null แทนการสร้าง URL ผิดพลาด
+    return null;
+  }
 
-  return url.toString();
-};
+  try {
+    // ปรับ path ตามโปรเจค ถ้าจำเป็น
+    return new URL("/auth/oidc/login", base).toString();
+  } catch (err) {
+    console.warn("getLoginUrl: invalid base url", base, err);
+    return null;
+  }
+}

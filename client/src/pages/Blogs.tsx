@@ -10,7 +10,7 @@ import { useState } from "react";
  * Blogs list page - Display all blogs with search functionality
  */
 export default function Blogs() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -38,11 +38,24 @@ export default function Blogs() {
             <Button variant="ghost">← กลับ</Button>
           </Link>
           <h1 className="text-2xl font-bold">บทความทั้งหมด</h1>
-          {isAuthenticated && (
-            <Link href="/create">
-              <Button variant="default">เขียนใหม่</Button>
-            </Link>
-          )}
+          <div className="flex gap-2 items-center">
+            {isAuthenticated && (
+              <>
+                <Link href="/create">
+                  <Button variant="default">เขียนใหม่</Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    logout();
+                    navigate("/");
+                  }}
+                >
+                  ออกจากระบบ
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </header>
 

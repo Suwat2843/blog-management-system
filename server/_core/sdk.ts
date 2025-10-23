@@ -257,9 +257,14 @@ class SDKServer {
   }
 
   async authenticateRequest(req: Request): Promise<User> {
-    // Regular authentication flow
+    // Check for custom login session first
     const cookies = this.parseCookies(req.headers.cookie);
     const sessionCookie = cookies.get(COOKIE_NAME);
+    
+    if (!sessionCookie) {
+      throw ForbiddenError("No session cookie found");
+    }
+
     const session = await this.verifySession(sessionCookie);
 
     if (!session) {

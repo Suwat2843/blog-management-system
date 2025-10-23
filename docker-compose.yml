@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: blog_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-blog_db}
+      MYSQL_USER: ${MYSQL_USER:-bloguser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-blogpassword}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - blog_network
+
+  # Blog Management App
+  app:
+    build: .
+    container_name: blog_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=mysql://${MYSQL_USER:-bloguser}:${MYSQL_PASSWORD:-blogpassword}@mysql:3306/${MYSQL_DATABASE:-blog_db}
+      - JWT_SECRET=${JWT_SECRET}
+      - VITE_APP_TITLE=${VITE_APP_TITLE:-Blog Management System}
+    depends_on:
+      - mysql
+    networks:
+      - blog_network
+
+volumes:
+  mysql_data:
+
+networks:
+  blog_network:
+    driver: bridge

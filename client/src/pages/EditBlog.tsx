@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
  * Edit blog page - Form to edit an existing blog post
  */
 export default function EditBlog({ params }: { params: { id: string } }) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [, navigate] = useLocation();
   const blogId = parseInt(params.id);
   const [title, setTitle] = useState("");
@@ -90,7 +90,15 @@ export default function EditBlog({ params }: { params: { id: string } }) {
             ← กลับ
           </Button>
           <h1 className="text-2xl font-bold flex-1 text-center">แก้ไขบทความ</h1>
-          <div className="w-20"></div>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
+          >
+            ออกจากระบบ
+          </Button>
         </div>
       </header>
 

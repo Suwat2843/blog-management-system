@@ -31,6 +31,15 @@ export default function Home() {
                 <div className="text-sm text-muted-foreground">
                   {user?.username || user?.email}
                 </div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    logout();
+                    navigate("/");
+                  }}
+                >
+                  ออกจากระบบ
+                </Button>
               </>
             ) : (
               <>

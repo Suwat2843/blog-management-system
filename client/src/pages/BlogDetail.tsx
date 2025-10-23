@@ -11,7 +11,7 @@ import { useState } from "react";
  * Blog detail page - Display a single blog with comments
  */
 export default function BlogDetail({ params }: { params: { id: string } }) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
   const blogId = parseInt(params.id);
   const [commentContent, setCommentContent] = useState("");
@@ -93,7 +93,15 @@ export default function BlogDetail({ params }: { params: { id: string } }) {
             ← กลับ
           </Button>
           <h1 className="text-2xl font-bold flex-1 text-center">รายละเอียดบทความ</h1>
-          <div className="w-20"></div>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
+          >
+            ออกจากระบบ
+          </Button>
         </div>
       </header>
 

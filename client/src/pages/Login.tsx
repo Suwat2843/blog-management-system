@@ -56,10 +56,8 @@ export default function Login() {
         return;
       }
 
-      // Redirect to home page
-      navigate("/");
-      // Refresh the page to update auth state
-      window.location.reload();
+      // Redirect to create blog page after successful login
+      window.location.href = "/create";
     } catch (err) {
       setError("An error occurred during login");
       console.error(err);
