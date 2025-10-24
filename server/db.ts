@@ -1,6 +1,5 @@
 import { eq, like, desc } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, blogs, comments, InsertBlog, InsertComment } from "../drizzle/schema";
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -9,8 +8,7 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      const sql = postgres(process.env.DATABASE_URL);
-      _db = drizzle(sql);
+      _db = drizzle(process.env.DATABASE_URL);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
